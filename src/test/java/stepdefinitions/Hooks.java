@@ -11,6 +11,9 @@ import io.cucumber.java.Scenario;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class Hooks {
 
@@ -53,65 +56,64 @@ public class Hooks {
             e.printStackTrace();
         }
 
-        // Attach screenshot to ExtentReports - displayed inline directly
+        // Attach screenshot to ExtentReports using file path (normal image, not Base64)
+        // Copy screenshot to target/ folder (same as report) and use relative path
         if (scenario.isFailed()) {
             // Error details are already logged in step definitions
             // This will show the final test failure status with screenshot
             String errorMessage = "Test Failed - See step details above for error information";
 
-            if (screenshotBytes != null && screenshotBytes.length > 0) {
+            if (!screenshotPath.isEmpty()) {
                 try {
-                    // Use Base64 encoding - ExtentReports 5.0 displays images inline automatically
-                    String base64Screenshot = java.util.Base64.getEncoder().encodeToString(screenshotBytes);
-                    Hooks.scenario.fail(errorMessage,
-                            MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());
-                } catch (Exception e) {
-                    // Fallback to file path if Base64 fails
-                    if (!screenshotPath.isEmpty()) {
-                        try {
-                            String relativePath = screenshotPath.replace(System.getProperty("user.dir"), "")
-                                    .replace("\\", "/");
-                            if (relativePath.startsWith("/")) {
-                                relativePath = relativePath.substring(1);
-                            }
-                            Hooks.scenario.fail(errorMessage,
-                                    MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
-                        } catch (Exception ex) {
-                            Hooks.scenario.fail(errorMessage + "\nScreenshot: " + screenshotPath);
-                        }
+                    File screenshotFile = new File(screenshotPath);
+                    if (screenshotFile.exists()) {
+                        // Copy screenshot to target/ folder (same location as report)
+                        File targetDir = new File("target");
+                        File targetScreenshot = new File(targetDir, screenshotFile.getName());
+                        Files.copy(screenshotFile.toPath(), targetScreenshot.toPath(),
+                                StandardCopyOption.REPLACE_EXISTING);
+
+                        // Use relative path from report location (just filename since both are in
+                        // target/)
+                        String relativePath = screenshotFile.getName();
+                        Hooks.scenario.fail(errorMessage,
+                                MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
                     } else {
-                        Hooks.scenario.fail(errorMessage);
+                        Hooks.scenario.fail(errorMessage + "\nScreenshot file not found: " + screenshotPath);
                     }
+                } catch (Exception e) {
+                    Hooks.scenario
+                            .fail(errorMessage + "\nScreenshot path: " + screenshotPath + "\nError: " + e.getMessage());
                     System.err.println("Erreur lors de l'ajout du screenshot: " + e.getMessage());
+                    e.printStackTrace();
                 }
             } else {
                 Hooks.scenario.fail(errorMessage);
             }
         } else {
-            if (screenshotBytes != null && screenshotBytes.length > 0) {
+            if (!screenshotPath.isEmpty()) {
                 try {
-                    // Use Base64 encoding - ExtentReports 5.0 displays images inline automatically
-                    String base64Screenshot = java.util.Base64.getEncoder().encodeToString(screenshotBytes);
-                    Hooks.scenario.pass("Test Passed",
-                            MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());
-                } catch (Exception e) {
-                    // Fallback to file path if Base64 fails
-                    if (!screenshotPath.isEmpty()) {
-                        try {
-                            String relativePath = screenshotPath.replace(System.getProperty("user.dir"), "")
-                                    .replace("\\", "/");
-                            if (relativePath.startsWith("/")) {
-                                relativePath = relativePath.substring(1);
-                            }
-                            Hooks.scenario.pass("Test Passed",
-                                    MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
-                        } catch (Exception ex) {
-                            Hooks.scenario.pass("Test Passed - Screenshot: " + screenshotPath);
-                        }
+                    File screenshotFile = new File(screenshotPath);
+                    if (screenshotFile.exists()) {
+                        // Copy screenshot to target/ folder (same location as report)
+                        File targetDir = new File("target");
+                        File targetScreenshot = new File(targetDir, screenshotFile.getName());
+                        Files.copy(screenshotFile.toPath(), targetScreenshot.toPath(),
+                                StandardCopyOption.REPLACE_EXISTING);
+
+                        // Use relative path from report location (just filename since both are in
+                        // target/)
+                        String relativePath = screenshotFile.getName();
+                        Hooks.scenario.pass("Test Passed",
+                                MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
                     } else {
-                        Hooks.scenario.pass("Test Passed");
+                        Hooks.scenario.pass("Test Passed - Screenshot file not found: " + screenshotPath);
                     }
+                } catch (Exception e) {
+                    Hooks.scenario
+                            .pass("Test Passed - Screenshot path: " + screenshotPath + "\nError: " + e.getMessage());
                     System.err.println("Erreur lors de l'ajout du screenshot: " + e.getMessage());
+                    e.printStackTrace();
                 }
             } else {
                 Hooks.scenario.pass("Test Passed");
