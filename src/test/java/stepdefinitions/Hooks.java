@@ -12,8 +12,6 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 public class Hooks {
 
@@ -57,7 +55,9 @@ public class Hooks {
         }
 
         // Attach screenshot to ExtentReports using file path (normal image, not Base64)
-        // Copy screenshot to target/ folder (same as report) and use relative path
+        // Screenshots are saved directly in target/ folder (same as report) via
+        // TestBase.captureScreenshot
+        // So we can use simple relative path (just filename) without copying files
         if (scenario.isFailed()) {
             // Error details are already logged in step definitions
             // This will show the final test failure status with screenshot
@@ -67,12 +67,6 @@ public class Hooks {
                 try {
                     File screenshotFile = new File(screenshotPath);
                     if (screenshotFile.exists()) {
-                        // Copy screenshot to target/ folder (same location as report)
-                        File targetDir = new File("target");
-                        File targetScreenshot = new File(targetDir, screenshotFile.getName());
-                        Files.copy(screenshotFile.toPath(), targetScreenshot.toPath(),
-                                StandardCopyOption.REPLACE_EXISTING);
-
                         // Use relative path from report location (just filename since both are in
                         // target/)
                         String relativePath = screenshotFile.getName();
@@ -95,12 +89,6 @@ public class Hooks {
                 try {
                     File screenshotFile = new File(screenshotPath);
                     if (screenshotFile.exists()) {
-                        // Copy screenshot to target/ folder (same location as report)
-                        File targetDir = new File("target");
-                        File targetScreenshot = new File(targetDir, screenshotFile.getName());
-                        Files.copy(screenshotFile.toPath(), targetScreenshot.toPath(),
-                                StandardCopyOption.REPLACE_EXISTING);
-
                         // Use relative path from report location (just filename since both are in
                         // target/)
                         String relativePath = screenshotFile.getName();

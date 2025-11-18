@@ -60,15 +60,16 @@ public class TestBase {
         }
 
         try {
-            File screenshotsDir = new File("target/screenshots");
-            if (!screenshotsDir.exists()) {
-                screenshotsDir.mkdirs();
+
+            File targetDir = new File("target");
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
             }
 
             String timeStamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
 
             String fileName = scenarioName.replaceAll("[^a-zA-Z0-9_-]", "_") + "_" + timeStamp + ".png";
-            File screenshotFile = new File(screenshotsDir, fileName);
+            File screenshotFile = new File(targetDir, fileName);
 
             TakesScreenshot ts = (TakesScreenshot) currentDriver;
             byte[] screenshotBytes = ts.getScreenshotAs(OutputType.BYTES);
@@ -86,16 +87,13 @@ public class TestBase {
         }
     }
 
-
-
-
     @BeforeEach
-    void setupTest(){
+    void setupTest() {
         initializeDriver();
     }
 
     @AfterEach
-    void teardownTest(){
+    void teardownTest() {
         closeDriver();
     }
 }
