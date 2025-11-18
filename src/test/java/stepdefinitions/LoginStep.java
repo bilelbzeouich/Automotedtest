@@ -18,7 +18,7 @@ public class LoginStep {
     }
 
     @Given("the user is on the login page")
-    public void the_user_is_on_the_login_page() {
+    public void userIsOnLoginPage() {
         try {
             loginPage.openLoginPage();
             Hooks.scenario.log(Status.PASS, "The user is on the login page");
