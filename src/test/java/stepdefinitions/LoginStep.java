@@ -21,24 +21,14 @@ public class LoginStep {
         loginPage.openLoginPage();
     }
 
-    @When("the user enters a username")
-    public void the_user_enters_a_username() {
-        loginPage.enterUsername("tomsmith");
+    @When("the user enters a username as {string}")
+    public void the_user_enters_a_username(String username) {
+        loginPage.enterUsername(username);
     }
 
-    @When("the user enters an invalid username")
-    public void the_user_enters_an_invalid_username() {
-        loginPage.enterUsername("invaliduser");
-    }
-
-    @And("the user enters a password")
-    public void the_user_enters_a_password() {
-        loginPage.enterPassword("SuperSecretPassword!");
-    }
-
-    @And("the user enters an invalid password")
-    public void the_user_enters_an_invalid_password() {
-        loginPage.enterPassword("wrongpassword");
+    @And("the user enters a password as {string}")
+    public void the_user_enters_a_password_as(String password) {
+        loginPage.enterPassword(password);
     }
 
     @And("clicks on the login button")
