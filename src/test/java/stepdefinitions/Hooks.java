@@ -55,11 +55,15 @@ public class Hooks {
 
         // Attach screenshot to ExtentReports - displayed inline directly
         if (scenario.isFailed()) {
+            // Error details are already logged in step definitions
+            // This will show the final test failure status with screenshot
+            String errorMessage = "Test Failed - See step details above for error information";
+
             if (screenshotBytes != null && screenshotBytes.length > 0) {
                 try {
                     // Use Base64 encoding - ExtentReports 5.0 displays images inline automatically
                     String base64Screenshot = java.util.Base64.getEncoder().encodeToString(screenshotBytes);
-                    Hooks.scenario.fail("Test Failed",
+                    Hooks.scenario.fail(errorMessage,
                             MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());
                 } catch (Exception e) {
                     // Fallback to file path if Base64 fails
@@ -70,18 +74,18 @@ public class Hooks {
                             if (relativePath.startsWith("/")) {
                                 relativePath = relativePath.substring(1);
                             }
-                            Hooks.scenario.fail("Test Failed",
+                            Hooks.scenario.fail(errorMessage,
                                     MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
                         } catch (Exception ex) {
-                            Hooks.scenario.fail("Test Failed - Screenshot: " + screenshotPath);
+                            Hooks.scenario.fail(errorMessage + "\nScreenshot: " + screenshotPath);
                         }
                     } else {
-                        Hooks.scenario.fail("Test Failed - No screenshot available");
+                        Hooks.scenario.fail(errorMessage);
                     }
                     System.err.println("Erreur lors de l'ajout du screenshot: " + e.getMessage());
                 }
             } else {
-                Hooks.scenario.fail("Test Failed - No screenshot available");
+                Hooks.scenario.fail(errorMessage);
             }
         } else {
             if (screenshotBytes != null && screenshotBytes.length > 0) {

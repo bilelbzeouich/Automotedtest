@@ -111,8 +111,18 @@ public class LoginStep {
 
             System.out.println("Message d'erreur: " + errorMessage);
             Hooks.scenario.log(Status.PASS, "Error message displayed as expected: " + errorMessage);
+        } catch (AssertionError e) {
+            String errorDetails = "Assertion Failed: " + e.getMessage() + "\n" +
+                    "Expected: Message should contain 'Your username is invalid'\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
+            throw e;
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL, "Failed to verify error message: " + e.getMessage());
+            String errorDetails = "Failed to verify error message\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
     }
@@ -124,10 +134,28 @@ public class LoginStep {
             Assertions.assertTrue(successMessage.contains(expectedText),
                     "Le message de succès ne contient pas le texte attendu: " + expectedText);
             Hooks.scenario.log(Status.PASS, "Successful login message contains: " + expectedText);
+        } catch (AssertionError e) {
+            String errorDetails = "Assertion Failed: " + e.getMessage() + "\n" +
+                    "Expected: Message should contain '" + expectedText + "'\n" +
+                    "Actual message: " + (e.getMessage().contains("actual") ? e.getMessage() : "Unable to retrieve")
+                    + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
+            throw e;
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL,
-                    "Failed to verify message containing '" + expectedText + "': " + e.getMessage());
+            String errorDetails = "Failed to verify message containing '" + expectedText + "'\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
+    }
+
+    private String getStackTrace(Throwable e) {
+        java.io.StringWriter sw = new java.io.StringWriter();
+        java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
     }
 }
