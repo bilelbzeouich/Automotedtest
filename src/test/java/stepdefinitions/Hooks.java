@@ -29,29 +29,23 @@ public class Hooks {
     public void tearDown(Scenario scenario) {
         if (scenario.isFailed()) {
             String screenshotPath = TestBase.captureScreenshot(scenario.getName());
-
-            if (!screenshotPath.isEmpty() && Hooks.scenario != null) {
+            if (!screenshotPath.isEmpty()) {
                 try {
                     String relativePath = screenshotPath.replace(System.getProperty("user.dir") + "\\", "")
                             .replace("\\", "/");
-
                     Hooks.scenario.fail("Test Failed",
                             MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
                 } catch (Exception e) {
                     Hooks.scenario.fail("Test Failed - Screenshot: " + screenshotPath);
-                    System.err.println("Erreur lors de l'ajout du screenshot au rapport: " + e.getMessage());
+                    System.err.println("Erreur lors de l'ajout du screenshot: " + e.getMessage());
                 }
-            } else if (Hooks.scenario != null) {
+            } else {
                 Hooks.scenario.fail("Test Failed - No screenshot available");
             }
-        } else if (Hooks.scenario != null) {
+        } else {
             Hooks.scenario.pass("Test Passed");
         }
-
-        if (extent != null) {
-            extent.flush();
-        }
-
+        extent.flush();
         TestBase.closeDriver();
     }
 }
