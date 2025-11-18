@@ -23,7 +23,11 @@ public class LoginStep {
             loginPage.openLoginPage();
             Hooks.scenario.log(Status.PASS, "The user is on the login page");
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL, "Failed to open login page");
+            String errorDetails = "Failed to open login page\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
     }
@@ -34,7 +38,11 @@ public class LoginStep {
             loginPage.enterUsername(username);
             Hooks.scenario.log(Status.PASS, "Username entered: " + username);
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL, "Failed to enter username: " + username);
+            String errorDetails = "Failed to enter username: " + username + "\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
     }
@@ -45,7 +53,11 @@ public class LoginStep {
             loginPage.enterPassword(password);
             Hooks.scenario.log(Status.PASS, "Password entered successfully");
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL, "Failed to enter password");
+            String errorDetails = "Failed to enter password\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
     }
@@ -56,7 +68,11 @@ public class LoginStep {
             loginPage.clickLoginButton();
             Hooks.scenario.log(Status.PASS, "Login button clicked");
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL, "Failed to click login button");
+            String errorDetails = "Failed to click login button\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
     }
@@ -70,8 +86,18 @@ public class LoginStep {
 
             System.out.println("Message de succès: " + successMessage);
             Hooks.scenario.log(Status.PASS, "Successful login message displayed: " + successMessage);
+        } catch (AssertionError e) {
+            String errorDetails = "Assertion Failed: " + e.getMessage() + "\n" +
+                    "Expected: Message should contain 'You logged into a secure area'\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
+            throw e;
         } catch (Exception e) {
-            Hooks.scenario.log(Status.FAIL, "Failed to verify successful login message: " + e.getMessage());
+            String errorDetails = "Failed to verify successful login message\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
             throw e;
         }
     }

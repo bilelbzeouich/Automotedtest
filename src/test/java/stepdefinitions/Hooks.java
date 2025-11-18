@@ -53,11 +53,11 @@ public class Hooks {
             e.printStackTrace();
         }
 
-        // Attach screenshot to ExtentReports
+        // Attach screenshot to ExtentReports - displayed inline directly
         if (scenario.isFailed()) {
             if (screenshotBytes != null && screenshotBytes.length > 0) {
                 try {
-                    // Use Base64 encoding for ExtentReports
+                    // Use Base64 encoding - ExtentReports 5.0 displays images inline automatically
                     String base64Screenshot = java.util.Base64.getEncoder().encodeToString(screenshotBytes);
                     Hooks.scenario.fail("Test Failed",
                             MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());
@@ -86,7 +86,7 @@ public class Hooks {
         } else {
             if (screenshotBytes != null && screenshotBytes.length > 0) {
                 try {
-                    // Use Base64 encoding for ExtentReports
+                    // Use Base64 encoding - ExtentReports 5.0 displays images inline automatically
                     String base64Screenshot = java.util.Base64.getEncoder().encodeToString(screenshotBytes);
                     Hooks.scenario.pass("Test Passed",
                             MediaEntityBuilder.createScreenCaptureFromBase64String(base64Screenshot).build());

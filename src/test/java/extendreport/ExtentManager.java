@@ -12,6 +12,8 @@ public class ExtentManager {
             ExtentSparkReporter reporter = new ExtentSparkReporter("target/ExtentReport.html");
             reporter.config().setTheme(Theme.DARK);
             reporter.config().setDocumentTitle("Test Report");
+            // Enable inline display of Base64 images
+            reporter.config().setReportName("Test Execution Report");
             extent = new ExtentReports();
             extent.attachReporter(reporter);
         }
