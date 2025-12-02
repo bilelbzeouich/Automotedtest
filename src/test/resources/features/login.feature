@@ -11,7 +11,7 @@ Feature: Authentication
 
     Examples:
       | username  | password                |
-      | tomsmith  | SuperSecretPassword!    |
+      | tomsmith  | SuperSecretPassword    |
 
   @InvalidCredentials
   Scenario Outline: Failed login
