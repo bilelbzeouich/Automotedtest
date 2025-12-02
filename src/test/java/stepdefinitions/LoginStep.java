@@ -81,10 +81,14 @@ public class LoginStep {
     public void the_user_should_see_a_successful_login_message() {
         try {
             String successMessage = loginPage.getSuccessMessage();
-            Assertions.assertTrue(successMessage.contains("You logged into a secure area"),
-                    "Le message de succès ne contient pas le texte attendu");
-
             System.out.println("Message de succès: " + successMessage);
+
+            // Clean the message to remove any special characters like ×
+            String cleanedMessage = successMessage.replace("×", "").trim();
+
+            Assertions.assertTrue(cleanedMessage.contains("You logged into a secure area"),
+                    "Le message de succès ne contient pas le texte attendu. Message actuel: '" + successMessage + "'");
+
             Hooks.scenario.log(Status.PASS, "Successful login message displayed: " + successMessage);
         } catch (AssertionError e) {
             String errorDetails = "Assertion Failed: " + e.getMessage() + "\n" +
