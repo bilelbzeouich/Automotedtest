@@ -156,6 +156,51 @@ public class LoginStep {
         }
     }
 
+    @And("clicks on the logout button")
+    public void clicks_on_the_logout_button() {
+        try {
+            loginPage.clickLogoutButton();
+            Hooks.scenario.log(Status.PASS, "Logout button clicked");
+        } catch (Exception e) {
+            String errorDetails = "Failed to click logout button\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
+            throw e;
+        }
+    }
+
+    @Then("the user should see a successful logout message")
+    public void the_user_should_see_a_successful_logout_message() {
+        try {
+            String logoutMessage = loginPage.getLogoutMessage();
+            System.out.println("Message de déconnexion: " + logoutMessage);
+
+            // Clean the message to remove any special characters like ×
+            String cleanedMessage = logoutMessage.replace("×", "").trim();
+
+            Assertions.assertTrue(cleanedMessage.contains("You logged out of the secure area"),
+                    "Le message de déconnexion ne contient pas le texte attendu. Message actuel: '" + logoutMessage
+                            + "'");
+
+            Hooks.scenario.log(Status.PASS, "Successful logout message displayed: " + logoutMessage);
+        } catch (AssertionError e) {
+            String errorDetails = "Assertion Failed: " + e.getMessage() + "\n" +
+                    "Expected: Message should contain 'You logged out of the secure area'\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
+            throw e;
+        } catch (Exception e) {
+            String errorDetails = "Failed to verify successful logout message\n" +
+                    "Error: " + e.getMessage() + "\n" +
+                    "Cause: " + (e.getCause() != null ? e.getCause().getMessage() : "N/A") + "\n" +
+                    "Stack Trace: " + getStackTrace(e);
+            Hooks.scenario.log(Status.FAIL, errorDetails);
+            throw e;
+        }
+    }
+
     private String getStackTrace(Throwable e) {
         java.io.StringWriter sw = new java.io.StringWriter();
         java.io.PrintWriter pw = new java.io.PrintWriter(sw);

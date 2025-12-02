@@ -34,7 +34,8 @@ public class LoginPage {
     }
 
     public void clickLoginButton() {
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[type='submit']")));
+        WebElement button = wait
+                .until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[type='submit']")));
         button.click();
     }
 
@@ -44,6 +45,17 @@ public class LoginPage {
     }
 
     public String getErrorMessage() {
+        WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+        return messageElement.getText();
+    }
+
+    public void clickLogoutButton() {
+        WebElement logoutButton = wait
+                .until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/logout']")));
+        logoutButton.click();
+    }
+
+    public String getLogoutMessage() {
         WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
         return messageElement.getText();
     }
