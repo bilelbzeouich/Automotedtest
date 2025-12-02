@@ -2,7 +2,11 @@
 Feature: Logout
 
   Background:
-    Given the user is logged in with username "tomsmith" and password "SuperSecretPassword!"
+    Given the user is on the login page
+    When the user enters a username as "tomsmith"
+    And the user enters a password as "SuperSecretPassword!"
+    And clicks on the login button
+    Then the user should see a successful login message
 
   @Logout
   Scenario: Successful logout
