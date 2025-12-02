@@ -26,17 +26,3 @@ Feature: Authentication
       | invaliduser  | wrongpass    |
       | admin        | 123456       |
 
-  @LoginLogout
-  Scenario Outline: Successful login then logout
-    Given the user is on the login page
-    When the user enters a username as "<username>"
-    And the user enters a password as "<password>"
-    And clicks on the login button
-    Then the user should see a successful login message
-    When clicks on the logout button
-    Then the user should see a successful logout message
-
-    Examples:
-      | username  | password                |
-      | tomsmith  | SuperSecretPassword!    |
-

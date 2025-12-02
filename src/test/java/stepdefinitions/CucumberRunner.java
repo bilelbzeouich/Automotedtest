@@ -9,6 +9,6 @@ import org.junit.runner.RunWith;
                 "pretty",
                 "html:target/cucumber-reports/cucumber.html",
                 "json:target/cucumber-reports/cucumber.json"
-}, monochrome = true, tags = "@webForm or @webFormSimple or @runValidLoginAsAdmin or @runInvalidLogin or @ValidCredentials or @InvalidCredentials or @TestScreenshotFailure or @LoginLogout")
+}, monochrome = true, tags = "@webForm or @webFormSimple or @runValidLoginAsAdmin or @runInvalidLogin or @ValidCredentials or @InvalidCredentials or @TestScreenshotFailure or @LogoutTests")
 public class CucumberRunner {
 }
