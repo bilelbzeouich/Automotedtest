@@ -31,27 +31,29 @@ public class Hooks {
 
     @After
     public void tearDown(Scenario scenario) {
-        // Always capture screenshot regardless of pass/fail
+        // Only capture screenshot when test fails
         byte[] screenshotBytes = null;
         String screenshotPath = "";
 
-        try {
-            WebDriver driver = TestBase.getDriver();
-            if (driver != null) {
-                TakesScreenshot ts = (TakesScreenshot) driver;
-                screenshotBytes = ts.getScreenshotAs(OutputType.BYTES);
+        if (scenario.isFailed()) {
+            try {
+                WebDriver driver = TestBase.getDriver();
+                if (driver != null) {
+                    TakesScreenshot ts = (TakesScreenshot) driver;
+                    screenshotBytes = ts.getScreenshotAs(OutputType.BYTES);
 
-                // Save screenshot to file
-                screenshotPath = TestBase.captureScreenshot(scenario.getName());
+                    // Save screenshot to file
+                    screenshotPath = TestBase.captureScreenshot(scenario.getName());
 
-                // Embed screenshot into Cucumber report
-                if (screenshotBytes != null && screenshotBytes.length > 0) {
-                    scenario.attach(screenshotBytes, "image/png", "Screenshot");
+                    // Embed screenshot into Cucumber report
+                    if (screenshotBytes != null && screenshotBytes.length > 0) {
+                        scenario.attach(screenshotBytes, "image/png", "Screenshot");
+                    }
                 }
+            } catch (Exception e) {
+                System.err.println("Erreur lors de la capture du screenshot: " + e.getMessage());
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            System.err.println("Erreur lors de la capture du screenshot: " + e.getMessage());
-            e.printStackTrace();
         }
 
         // Attach screenshot to ExtentReports using file path (normal image, not Base64)
@@ -85,27 +87,8 @@ public class Hooks {
                 Hooks.scenario.fail(errorMessage);
             }
         } else {
-            if (!screenshotPath.isEmpty()) {
-                try {
-                    File screenshotFile = new File(screenshotPath);
-                    if (screenshotFile.exists()) {
-                        // Use relative path from report location (just filename since both are in
-                        // target/)
-                        String relativePath = screenshotFile.getName();
-                        Hooks.scenario.pass("Test Passed",
-                                MediaEntityBuilder.createScreenCaptureFromPath(relativePath).build());
-                    } else {
-                        Hooks.scenario.pass("Test Passed - Screenshot file not found: " + screenshotPath);
-                    }
-                } catch (Exception e) {
-                    Hooks.scenario
-                            .pass("Test Passed - Screenshot path: " + screenshotPath + "\nError: " + e.getMessage());
-                    System.err.println("Erreur lors de l'ajout du screenshot: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            } else {
-                Hooks.scenario.pass("Test Passed");
-            }
+            // Test passed - no screenshot needed
+            Hooks.scenario.pass("Test Passed");
         }
         extent.flush();
         TestBase.closeDriver();

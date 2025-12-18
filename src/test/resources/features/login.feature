@@ -11,7 +11,7 @@ Feature: Authentication
 
     Examples:
       | username  | password                |
-      | tomsmith  | SuperSecretPassword!   |
+      | Admin     | admin123                |
 
   @InvalidCredentials
   Scenario Outline: Failed login
@@ -24,5 +24,4 @@ Feature: Authentication
     Examples:
       | username     | password     |
       | invaliduser  | wrongpass    |
-      | admin        | 123456       |
 

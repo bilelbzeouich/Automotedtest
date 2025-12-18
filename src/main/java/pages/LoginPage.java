@@ -18,17 +18,17 @@ public class LoginPage {
     }
 
     public void openLoginPage() {
-        driver.get("https://the-internet.herokuapp.com/login");
+        driver.get("https://opensource-demo.orangehrmlive.com/");
     }
 
     public void enterUsername(String username) {
-        WebElement usernameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+        WebElement usernameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")));
         usernameElement.clear();
         usernameElement.sendKeys(username);
     }
 
     public void enterPassword(String password) {
-        WebElement passwordElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
+        WebElement passwordElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("password")));
         passwordElement.clear();
         passwordElement.sendKeys(password);
     }
@@ -40,12 +40,15 @@ public class LoginPage {
     }
 
     public String getSuccessMessage() {
-        WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
-        return messageElement.getText();
+        // Wait for dashboard to appear (indicates successful login)
+        WebElement dashboardElement = wait
+                .until(ExpectedConditions.presenceOfElementLocated(By.className("oxd-topbar-header-breadcrumb")));
+        return dashboardElement.getText();
     }
 
     public String getErrorMessage() {
-        WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+        WebElement messageElement = wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.className("oxd-alert-content-text")));
         return messageElement.getText();
     }
 }

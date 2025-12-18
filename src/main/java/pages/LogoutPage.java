@@ -18,13 +18,20 @@ public class LogoutPage {
     }
 
     public void clickLogoutButton() {
+        // Click on user menu dropdown
+        WebElement userMenu = wait.until(ExpectedConditions.elementToBeClickable(By.className("oxd-userdropdown-name")));
+        userMenu.click();
+        
+        // Click on logout link
         WebElement logoutButton = wait
-                .until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/logout']")));
+                .until(ExpectedConditions.elementToBeClickable(By.linkText("Logout")));
         logoutButton.click();
     }
 
     public String getLogoutMessage() {
-        WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
-        return messageElement.getText();
+        // Wait for login page to appear (indicates successful logout)
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("orangehrm-login-branding")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("orangehrm-login-form")));
+        return "Logged out successfully";
     }
 }

@@ -30,7 +30,7 @@ public class LogoutStep {
             // Verify login was successful
             String successMessage = loginPage.getSuccessMessage();
             String cleanedMessage = successMessage.replace("×", "").trim();
-            Assertions.assertTrue(cleanedMessage.contains("You logged into a secure area"),
+            Assertions.assertTrue(cleanedMessage.contains("Dashboard") || cleanedMessage.contains("PIM"),
                     "Login failed. Cannot proceed with logout test.");
 
             Hooks.scenario.log(Status.PASS, "User successfully logged in with username: " + username);
@@ -68,7 +68,7 @@ public class LogoutStep {
             // Clean the message to remove any special characters like ×
             String cleanedMessage = logoutMessage.replace("×", "").trim();
 
-            Assertions.assertTrue(cleanedMessage.contains("You logged out of the secure area"),
+            Assertions.assertTrue(cleanedMessage.contains("Logged out successfully") || cleanedMessage.contains("successfully"),
                     "Le message de déconnexion ne contient pas le texte attendu. Message actuel: '" + logoutMessage
                             + "'");
 

@@ -86,7 +86,7 @@ public class LoginStep {
             // Clean the message to remove any special characters like ×
             String cleanedMessage = successMessage.replace("×", "").trim();
 
-            Assertions.assertTrue(cleanedMessage.contains("You logged into a secure area"),
+            Assertions.assertTrue(cleanedMessage.contains("Dashboard") || cleanedMessage.contains("PIM"),
                     "Le message de succès ne contient pas le texte attendu. Message actuel: '" + successMessage + "'");
 
             Hooks.scenario.log(Status.PASS, "Successful login message displayed: " + successMessage);
@@ -110,7 +110,7 @@ public class LoginStep {
     public void the_user_should_see_an_error_message() {
         try {
             String errorMessage = loginPage.getErrorMessage();
-            Assertions.assertTrue(errorMessage.contains("Your username is invalid"),
+            Assertions.assertTrue(errorMessage.contains("Invalid credentials") || errorMessage.contains("Invalid"),
                     "Le message d'erreur ne contient pas le texte attendu");
 
             System.out.println("Message d'erreur: " + errorMessage);
